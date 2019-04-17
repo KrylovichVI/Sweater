@@ -1,0 +1,8 @@
+.idea
+target
+uploads
+*.class
+*.jar
+*.log
+
+
