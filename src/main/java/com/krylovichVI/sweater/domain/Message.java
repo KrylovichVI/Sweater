@@ -1,10 +1,6 @@
 package com.krylovichVI.sweater.domain;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
 public class Message {
@@ -62,6 +58,6 @@ public class Message {
     }
 
     public String getAuthorName(){
-        return author != null ? author.getUsername() : "<none>";gi
+        return author != null ? author.getUsername() : "<none>";
     }
 }
