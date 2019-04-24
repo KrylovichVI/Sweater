@@ -54,7 +54,6 @@ public class MainController {
         Iterable<Message> messages = messageRepo.findAll();
 
         model.addAttribute("messages", messages);
-//        model.addAttribute("filter","");
 
         return "main";
     }
