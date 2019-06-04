@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/user")
-@PreAuthorize("hasAuthority('ADMIN')")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     @GetMapping()
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String userList(Model model){
         model.addAttribute("users", userService.findAll());
 
@@ -33,16 +33,18 @@ public class UserController {
     }
 
     @GetMapping("{user}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String userEditForm(
             @PathVariable() User user,
             Model model
     ){
-        model.addAttribute("user", user);
+        model.addAttribute("_user", user);
         model.addAttribute("roles", Role.values());
         return "userEdit";
     }
 
-    @PostMapping()
+    @PostMapping(params = "save")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String userSave(
             @RequestParam String username,
             @RequestParam Map<String, String> form,
@@ -52,6 +54,16 @@ public class UserController {
 
         return "redirect:/user";
     }
+
+    @PostMapping(params = "delete")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String userDelete(
+            @RequestParam("userId") User user
+    ){
+        userService.deleteUser(user);
+        return "redirect:/user";
+    }
+
 
     @GetMapping("profile")
     public String getProfile(@AuthenticationPrincipal User user, Model model){

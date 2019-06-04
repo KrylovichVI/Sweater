@@ -1,5 +1,6 @@
 package com.krylovichVI.sweater.service;
 
+import com.krylovichVI.sweater.controller.ControllerUtils;
 import com.krylovichVI.sweater.domain.Role;
 import com.krylovichVI.sweater.domain.User;
 import com.krylovichVI.sweater.repos.UserRepo;
@@ -7,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,11 +22,19 @@ public class UserService implements UserDetailsService {
     private UserRepo userRepo;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private MailSender mailSender;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo.findByUsername(username);
+        User user = userRepo.findByUsername(username);
+        if(user == null){
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return user;
     }
 
     public boolean addUser(User user){
@@ -36,6 +47,7 @@ public class UserService implements UserDetailsService {
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepo.save(user);
 
@@ -61,7 +73,7 @@ public class UserService implements UserDetailsService {
             return false;
         }
 
-        user.setActivationCode(null);
+       // user.setActivationCode(null);
         userRepo.save(user);
 
         return true;
@@ -103,7 +115,7 @@ public class UserService implements UserDetailsService {
         }
 
         if(!StringUtils.isEmpty(password)){
-            user.setPassword(password);
+            user.setPassword(passwordEncoder.encode(password));
         }
 
         userRepo.save(user);
@@ -113,4 +125,44 @@ public class UserService implements UserDetailsService {
         }
 
     }
+
+    public void deleteUser(User user) {
+        userRepo.delete(user);
+    }
+
+    public boolean consistUser(String email) {
+        if(userRepo.findByEmail(email) != null){
+            return true;
+        }
+
+        return false;
+    }
+
+
+    public void sendUserPassword(String email) {
+        sendMessagePassword(userRepo.findByEmail(email));
+    }
+
+    public void sendMessagePassword(User user){
+        user.setActivationCode(UUID.randomUUID().toString());
+        userRepo.save(user);
+
+        String message = String.format(
+                "You asked us to reset your forgotten password. To complete the process, please click on the link below or paste it into your browser: \n" +
+                " http://localhost:8080/forgotpassword/%s/%s",
+                user.getId(),
+                user.getActivationCode()
+        );
+
+        mailSender.send(user.getEmail(), "Forgot password!", message);
+    }
+
+    public void updatePassword(String username, String password) {
+        User user = userRepo.findByUsername(username);
+
+        user.setPassword(passwordEncoder.encode(password));
+
+        userRepo.save(user);
+    }
+    
 }
