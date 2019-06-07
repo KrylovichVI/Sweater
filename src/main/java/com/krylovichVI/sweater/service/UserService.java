@@ -73,10 +73,19 @@ public class UserService implements UserDetailsService {
             return false;
         }
 
-       // user.setActivationCode(null);
+        user.setActivationCode(null);
         userRepo.save(user);
 
         return true;
+    }
+
+    public boolean isActiveLink(String code){
+        User user = userRepo.findByActivationCode(code);
+        if(user == null){
+            return false;
+        } else{
+            return true;
+        }
     }
 
     public List<User> findAll() {
