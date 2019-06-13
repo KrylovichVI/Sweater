@@ -5,6 +5,7 @@ import com.krylovichVI.sweater.domain.Role;
 import com.krylovichVI.sweater.domain.User;
 import com.krylovichVI.sweater.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +27,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private MailSender mailSender;
+
+    @Value("${hostname}")
+    private String hostname;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -59,8 +63,9 @@ public class UserService implements UserDetailsService {
     private void sendMessage(User user) {
         if(!StringUtils.isEmpty(user.getEmail())){
             String message = String.format("Hello, %s! \n" +
-                    "Welcom to Sweater. Please, visit next link: http://localhost:8080/activation/%s",
+                    "Welcom to Sweater. Please, visit next link: http://%s/activation/%s",
                     user.getUsername(),
+                    hostname,
                     user.getActivationCode());
 
            mailSender.send(user.getEmail(), "Activation code", message);
@@ -158,7 +163,8 @@ public class UserService implements UserDetailsService {
 
         String message = String.format(
                 "You asked us to reset your forgotten password. To complete the process, please click on the link below or paste it into your browser: \n" +
-                " http://localhost:8080/forgotpassword/%s/%s",
+                " http://%s/forgotpassword/%s/%s",
+                hostname,
                 user.getId(),
                 user.getActivationCode()
         );
