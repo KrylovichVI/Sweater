@@ -13,7 +13,7 @@
     <input type="hidden" name="_csrf" value="${_csrf.token}"/>
     <div>
         <input type="submit" name="save" value="Save"/>
-        <#if getUserId != _user.id>
+        <#if currentUserId != _user.id>
             <input type="submit" name="delete" value="Delete"/>
         </#if>
     </div>

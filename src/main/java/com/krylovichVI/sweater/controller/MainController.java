@@ -70,21 +70,8 @@ public class MainController {
             model.mergeAttributes(errorsMap);
             model.addAttribute("message", message);
         }else {
-            if (file != null && !file.getOriginalFilename().isEmpty()) {
+            ControllerUtils.saveFile(message, file, uploadPath);
 
-                File uploadDir = new File(uploadPath);
-
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdir();
-                }
-
-                String uuidFilename = UUID.randomUUID().toString();
-                String resultFilename = uuidFilename + "-" + file.getOriginalFilename();
-
-                file.transferTo(new File(uploadPath + "/" + resultFilename));
-
-                message.setFilename(resultFilename);
-            }
             model.addAttribute("message", null);
 
             messageRepo.save(message);
@@ -96,5 +83,6 @@ public class MainController {
 
         return "main";
     }
+
 
 }
