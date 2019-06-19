@@ -4,6 +4,7 @@ import com.krylovichVI.sweater.domain.Role;
 import com.krylovichVI.sweater.domain.User;
 import com.krylovichVI.sweater.repos.UserRepo;
 import com.krylovichVI.sweater.service.UserService;
+import com.sun.javafx.sg.prism.NGShape;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -81,6 +82,45 @@ public class UserController {
         userService.updateProfile(user, password, email);
 
         return "redirect:/user/profile";
+    }
+
+    @GetMapping("subscribe/{user}")
+    public String subscribe(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable User user
+    ){
+        userService.subscribe(currentUser, user);
+
+        return "redirect:/user-messages/ " + user.getId();
+    }
+
+    @GetMapping("unsubscribe/{user}")
+    public String unsubscribe(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable User user
+    ){
+        userService.unsubscribe(currentUser, user);
+
+        return "redirect:/user-messages/" + user.getId();
+    }
+
+    @GetMapping("{type}/{user}/list")
+    public String userList(
+            Model model,
+            @PathVariable String type,
+            @PathVariable User user
+    ){
+
+        model.addAttribute("userChannel", user);
+        model.addAttribute("type", type);
+
+        if("ssubscriptions".equals(type)){
+            model.addAttribute("users", user.getSubscriptions());
+        }else{
+            model.addAttribute("users", user.getSubscribers());
+        }
+
+        return "subscriptions";
     }
 
 }
