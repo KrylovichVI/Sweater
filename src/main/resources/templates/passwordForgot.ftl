@@ -11,12 +11,11 @@
                    placeholder="Email"/>
             <#if message??>
                 <div>
-                ${message}
+                    ${message}
                 </div>
             </#if>
-
         </div>
-    <input type="hidden" name="_csrf" value="${_csrf.token}">
+    <input type="hidden" name="_csrf" value="${_csrf.token}"/>
     <button type="submit" name="continue" class="btn btn-primary mb-2">Reset password</button>
 </div>
 </form>

@@ -14,10 +14,10 @@ ${message?ifExists}
     <div class="form-group row">
         <label class="col-sm-2 col-form-label"> Email :</label>
         <div class="col-sm-6">
-            <input type="email" class="form-control" name="email" placeholder="Email" value="${email!''}"/>
+            <input type="email" name="email" class="form-control" placeholder="some@some.com" value="${email!''}" />
         </div>
     </div>
-    <input type="hidden" name="_csrf" value="${_csrf.token}">
-    <button type="submit" class="btn btn-primary mb-2">Save</button>
+    <input type="hidden" name="_csrf" value="${_csrf.token}" />
+    <button class="btn btn-primary" type="submit">Save</button>
 </form>
 </@c.page>

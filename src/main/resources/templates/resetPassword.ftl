@@ -23,7 +23,7 @@
                        placeholder="New password"/>
             </div>
         </div>
-        <input type="hidden" name="_csrf" value="${_csrf.token}">
+        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
         <button type="submit" class="btn btn-primary mb-2">Reset password</button>
     </#if>
     </form>
