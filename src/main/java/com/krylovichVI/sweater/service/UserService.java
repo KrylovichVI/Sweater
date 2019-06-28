@@ -1,6 +1,5 @@
 package com.krylovichVI.sweater.service;
 
-import com.krylovichVI.sweater.controller.ControllerUtils;
 import com.krylovichVI.sweater.domain.Role;
 import com.krylovichVI.sweater.domain.User;
 import com.krylovichVI.sweater.repos.UserRepo;
@@ -12,7 +11,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -63,7 +61,7 @@ public class UserService implements UserDetailsService {
     private void sendMessage(User user) {
         if(!StringUtils.isEmpty(user.getEmail())){
             String message = String.format("Hello, %s! \n" +
-                    "Welcom to Sweater. Please, visit next link: http://%s/activation/%s",
+                    "Welcome to Sweater. Please, visit next link: http://%s/activation/%s",
                     user.getUsername(),
                     hostname,
                     user.getActivationCode());
