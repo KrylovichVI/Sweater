@@ -12,10 +12,12 @@
     <input type="hidden" name="userId" value="${_user.id}"/>
     <input type="hidden" name="_csrf" value="${_csrf.token}"/>
     <div>
-        <button type="submit" name="save" value="Save"/>
-        <#if currentUserId != _user.id>
-            <button type="submit" name="delete" value="Delete"/>
-        </#if>
+        <div>
+            <button type="submit" name="save">Save</button>
+            <#if currentUserId != _user.id>
+                <button type="submit" name="delete">Delete</button>
+            </#if>
+        </div>
     </div>
 </form>
 
