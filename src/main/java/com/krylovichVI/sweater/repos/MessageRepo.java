@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface MessageRepo extends CrudRepository<Message, Long> {
     @Query("select new com.krylovichVI.sweater.domain.dto.MessageDto(" +
-            "m," +
+            "   m, " +
             "   count(ml), " +
             "   sum(case when ml = :user then 1 else 0 end) > 0" +
             ") " +

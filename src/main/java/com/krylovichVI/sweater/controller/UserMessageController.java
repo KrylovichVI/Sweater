@@ -41,10 +41,10 @@ public class UserMessageController {
             @AuthenticationPrincipal User currentUser,
             @PathVariable User author,
             Model model,
-            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageble,
+            @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(required = false) Message message
             ){
-        Page<MessageDto> page = messageService.messageListForUser(pageble, currentUser, author);
+        Page<MessageDto> page = messageService.messageListForUser(pageable, currentUser, author);
 
         model.addAttribute("isSubscriber", author.getSubscribers().contains(currentUser));
         model.addAttribute("userChannel", author);
